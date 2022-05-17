@@ -38,7 +38,7 @@ export class UserController {
       const user = await this.usersService.findOne(id);
       return user;
     } catch (err) {
-      throw new NotFoundException(err);
+      throw new NotFoundException();
     }
   }
 }
