@@ -6,6 +6,7 @@ import {
   UseGuards,
   Request,
   ValidationPipe,
+  ConflictException,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
@@ -25,7 +26,13 @@ export class AuthController {
 
   @Post('register')
   async register(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto);
+    try {
+      const user = await this.authService.register(createUserDto);
+      if (!user) throw new ConflictException('User already registered');
+      return user;
+    } catch (err) {
+      throw err;
+    }
   }
 
   @UseGuards(JwtAuthGuard)
